@@ -131,7 +131,7 @@ select.error{
 }
 
 i.help{
-    color: green;
+    color: skyblue;
     cursor: help;
     transition: var(--transition);
 }
@@ -590,7 +590,7 @@ table tfoot td{
     table.responsive-table tfoot td{
         text-align: center !important;
         box-shadow: 0px 0px 1px 0px black;
-        display: block; 
+        display: block;
     }
     table.responsive-table tfoot td::before{
         display: none;
