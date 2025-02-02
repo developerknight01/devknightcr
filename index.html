@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevKnight</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="js/global.js" defer></script>
+    <script src="js/object.js"></script>
+</head>
+<body>
+    <div class="background"></div>
+    <header>
+        <nav class="main-nav">
+            <button class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="menu">
+                <li class="active"><a href="#">Inicio</a></li>
+                <li class="has-submenu">
+                    <a href="#">Generador</a>
+                    <ul class="submenu">
+                        <li class="close-submenu"><a href="#">Cerrar Generador</a></li>
+                        <li><a href="#">Proformas</a></li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#">Gestionar</a>
+                    <ul class="submenu">
+                        <li class="close-submenu"><a href="#">Cerrar Gestionar</a></li>
+                        <li><a href="#">Ventas Sencillas</a></li>
+                        <li><a href="#">Inventario Básico</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="proforma-generator">
+            <h2>Generador de Proformas</h2>
+    
+            <div class="group-form">
+                <div class="form-section empresa">
+                    <h3>Datos de la Empresa</h3>
+                    <h3>Cargar plantilla</h3>
+                    <button id="click-plantilla" class="btn search">Buscar plantilla</button>
+                    <div class="boxInput">
+                        <input type="text" id="empresa-proforma" class="full" data-type="text_num" value="000001" disabled>
+                        <label># Proforma</label>          
+                    </div>
+                    <div class="boxInput">
+                        <input type="text" id="empresa-id" data-type="text_num">
+                        <label>ID Empresarial</label>          
+                    </div>
+                    <div class="boxInput">
+                        <input type="text" id="empresa-nombre" data-type="text_num">
+                        <label>Nombre Empresarial</label>
+                    </div>
+                    <div class="boxInput">
+                        <input type="tel" id="empresa-telefono" data-type="number">
+                        <label>Teléfono</label>
+                    </div>
+                    <div class="boxInput">
+                        <input type="email" id="empresa-correo" data-type="email">
+                        <label>Correo</label>
+                    </div>
+                    <div class="boxInput">
+                        <input type="text" id="empresa-moneda" data-type="moneda">
+                        <label>Moneda</label>
+                        <i class="fa-regular fa-circle-question help" data-value="moneda"></i>
+                    </div>
+                    <button id="click-logo" class="btn search">Buscar logo</button>
+                    <input type="file" id="empresa-logo" accept="image/*" style="display: none;">
+                    <div id="logo-preview"></div> <br>
+                    <button id="click-plantilla-guardar" class="btn send">Guardar plantilla</button>
+                </div>
+                <div class="form-section cliente">
+                    <h3>Datos del Cliente</h3>
+                    <h3>Cargar plantilla</h3>
+                    <button id="click-plantilla-cliente" class="btn search">Buscar plantilla</button>                    
+                    <div class="boxInput">
+                        <input type="text" id="cliente-id" data-type="text_num">
+                        <label>ID Cliente</label>          
+                    </div>
+                    <div class="boxInput">
+                        <input type="text" id="cliente-nombre" data-type="text_num">
+                        <label>Nombre del Cliente</label>
+                    </div>
+                    <div class="boxInput">
+                        <input type="tel" id="cliente-telefono" data-type="number">
+                        <label>Teléfono</label>
+                    </div>
+                    <div class="boxInput">
+                        <input type="email" id="cliente-correo" data-type="email">
+                        <label>Correo</label>
+                    </div>
+                    <button id="click-plantilla-guardar-cliente" class="btn send">Guardar plantilla</button>
+                </div>
+            </div>
+    
+            <div class="form-section producto">
+                <h3>Productos/Servicios</h3>
+                <div id="product-inputs-container">
+                    <div class="product-input">
+                        <div class="boxInput">
+                            <input type="text" id="producto-codigo" class="producto-codigo" data-type="text_num">
+                            <label>Código de Producto</label>
+                        </div>
+                        <div class="boxInput">
+                            <input type="text" id="producto-descripcion" class="producto-descripcion" data-type="text_num" required>
+                            <label>Descripción</label>
+                        </div>
+                        <div class="boxInput">
+                            <select id="producto-unidad" class="producto-unidad" data-type="text_num" required>
+                                <option value="" selected disabled></option>
+                                <option value="U">Unidad</option>
+                                <option value="Gg">Kg</option>
+                                <option value="L">Litros</option>
+                                <option value="otro">Otro</option>
+                                <option value="Sp">Servicio Profesional</option>
+                            </select>
+                            <label>Unidad</label>
+                        </div>
+                        <div class="boxInput">
+                            <input type="text" id="producto-cantidad" class="producto-cantidad" min="1" data-type="number" required>
+                            <label>Cantidad</label>
+                        </div>
+                        <div class="boxInput">
+                            <input type="text" id="producto-precio" class="producto-precio precio" data-type="number" required>
+                            <label>Precio</label>
+                        </div>
+                        <div class="boxInput">
+                            <input type="text" id="producto-descuento" class="producto-descuento" min="0" max="100" data-type="number">
+                            <label>Descuento (%)</label>
+                        </div>
+                        <div class="boxInput">
+                            <input type="text" id="producto-impuesto" class="producto-impuesto" min="0" max="100" data-type="number">
+                            <label>Impuesto (%)</label>
+                        </div>
+                    </div>
+                </div>
+                <button id="agregar-item" class="btn add">Agregar</button>
+                <button id="limpiar-campos" class="btn clean">Limpiar</button>
+            </div>                
+    
+            <h3>Productos Registrados</h3>
+            <table id="productos-table" class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Unidad</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Descuento</th>
+                        <th>Impuesto</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" style="text-align: right;">Total:</td>
+                        <td id="total-proforma">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button id="crear-proforma" class="btn add">Crear</button>
+            <button id="guardar-proforma" class="btn send">Guardar</button>
+        </section>
+
+        <button id="accessibility-button"><i class="fa-solid fa-universal-access"></i></button>
+        <div id="accessibility-options" >
+            <button id="increase-font">A+</button>
+            <button id="decrease-font">A-</button>
+            <button id="reset-font">Reiniciar</button>
+        </div>
+        <div id="loading-screen">
+            <div class="loading-animation"></div>
+            <p>Cargando...</p>
+        </div>
+        <div id="popup-container"></div>  
+    </main>
+
+    <footer>
+        <p>&copy; 2024 DevKnight</p>
+    </footer>
+</body>
+</html>

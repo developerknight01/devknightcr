@@ -1,0 +1,605 @@
+/* Estilos básicos */
+:root {
+    --transition: .25s ease-in-out;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+.backward {
+    z-index: 0 !important;
+    transition: .5s ease-in-out;
+}
+
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.575);
+    opacity: 0%;
+    visibility: hidden;
+    z-index: -1;
+    transition: var(--transition);
+}
+
+.background.active {
+    opacity: 100%;
+    visibility: visible;
+    z-index: 1;
+}
+
+button {
+    border: none;
+    background: transparent;
+}
+button.btn{
+    box-shadow: 0px 0px 2px 0px black;
+    width: 120px;    
+    height: 35px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: auto 5px;
+    transition: var(--transition);
+}
+button.btnIcon{
+    box-shadow: 0px 0px 2px 0px black;
+    padding: 5px;
+    border-radius: 100%;
+    cursor: pointer;
+    margin: auto 5px;    
+    transition: var(--transition);
+}
+button.btnIcon i{
+    color: black;
+    transition: var(--transition);
+}
+button.add:hover{
+    background-color: greenyellow;
+}
+button.edit:hover{
+    background-color:gray;
+}
+button.delete:hover{
+    background-color:red;
+}
+button.edit:hover i,
+button.delete:hover i{
+    color:white;
+}
+button.clean:hover,
+button.search:hover{
+    background-color: lightgray;
+}
+button.send:hover{
+    background-color: lightskyblue;
+}
+button.btn:hover{
+    box-shadow: 0px 0px 5px 0px black;
+}
+
+.boxInput{
+    position: relative;
+    margin: 40px 0;
+    width: fit-content;
+}
+.boxInput label{
+    position: absolute;    
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 16px;
+    transition: var(--transition);
+}
+.boxInput:hover label,
+.boxInput input:focus + label,
+.boxInput input.full + label,
+.boxInput select.full + label{
+    bottom: 30px;
+    font-size: 13px;
+}
+
+input,
+select{
+    border: none;
+    border-bottom: 2px solid black;
+    transition: var(--transition);    
+    padding: 5px;    
+    outline: 0;    
+}
+select{
+    cursor: pointer;
+}
+input:hover,
+input:focus,
+select:hover,
+select:focus{    
+    border-bottom: 2px solid gray;
+}
+input.error,
+select.error{
+    border-bottom: 2px solid red;
+}
+.main-nav {
+    display: flex;
+    background-image: linear-gradient(0deg, cadetblue 0%, transparent 80%);
+    padding: 10px;
+    height: 25px ;
+    box-shadow: 0px 0px 5px 0px black;
+}
+
+i.help{
+    color: skyblue;
+    cursor: help;
+    transition: var(--transition);
+}
+i.help:hover{
+    color:blue;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: auto 0 0 50px;
+    display: flex;
+    transition: var(--transition)
+}
+
+.menu li {
+    cursor: pointer;
+    margin: auto 5px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: black;
+    opacity: 50% ;
+    transition: var(--transition);
+}
+
+.menu li.active a, .menu li:hover a {
+    opacity: 100%;
+    font-weight: bold;
+}
+
+.menu li.has-submenu:hover .submenu a {
+    opacity: 100%;
+    font-weight: unset;
+}
+
+.submenu {
+    opacity: 0%;
+    visibility: hidden;
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    background-color: lightgray ;
+    border: 1px solid #ccc;
+    transition: var(--transition);
+}
+
+.submenu li {
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+    padding: 10px;
+    background-image: linear-gradient(90deg,cadetblue 0%, transparent 100%);
+    background-repeat: no-repeat;
+    background-position: -200px;
+}
+
+.submenu .close-submenu {
+    display: none;
+}
+
+.submenu li:last-child {
+    margin-bottom: 0px;
+}
+
+.has-submenu:hover .submenu, .has-submenu.open .submenu {
+    opacity: 100%;
+    visibility: visible;
+    box-shadow: 0px 0px 3px 0.5px black;
+}
+
+.has-submenu:hover .submenu, .has-submenu.open a, .has-submenu.open .submenu li a {
+    opacity: 100;
+    font-weight: unset;
+}
+
+.has-submenu:hover .submenu li, .has-submenu.open .submenu li {
+    background-color: lightgray;
+    transition: var(--transition);
+}
+
+.has-submenu:hover .submenu li:hover, .has-submenu.open .submenu li:hover {
+    background-image: linear-gradient(90deg,cadetblue 100%, transparent 100%);
+    background-position: 0px;
+}
+
+/* Estilos para el menú móvil */
+.menu-toggle {
+    position: fixed;
+    height: 40px;
+    width: 40px;
+    top: 0px;
+    cursor: pointer;
+    opacity: 0%;
+    visibility: hidden;
+    z-index: -1;
+}
+
+.menu-toggle span {
+    background-color: gray;
+    width: 20px;
+    height: 5px;
+    display: block;
+    margin: 5px 0;
+    transition: var(--transition);
+}
+
+.menu-toggle:hover span {
+    background-color: black
+}
+
+.menu-toggle:hover span:nth-child(2), .menu-toggle.active span:nth-child(2) {
+    margin-left: 5px;
+}
+
+.menu-toggle.active:hover span:nth-child(2) {
+    margin-left: 0px;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        opacity: 100%;
+        visibility: visible;
+        z-index: 3;
+    }
+
+    .menu {
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        margin: 0;
+        background-color: #f0f0f0;
+        padding: 10px;
+    }
+
+    .menu.active {
+        display: flex;
+        left: 0%;
+        z-index: 2;
+    }
+
+    .menu-toggle {
+        display: block;
+        cursor: pointer;
+    }
+
+    .menu li {
+        margin: 10px 0;
+        position: relative ;
+        top: 40px
+    }
+
+    .submenu {
+        top: 0;
+        left: -100%;
+        width: 53%;
+        height: 100%;
+        z-index: 1;
+        box-shadow: unset;
+        position: fixed;
+        opacity: 100%;
+        visibility: visible;
+    }
+
+    .submenu .close-submenu {
+        display: block;
+    }
+
+    .submenu li {
+        top: unset;
+    }
+
+    .has-submenu.open .submenu li:hover {
+        background-image: linear-gradient(90deg,cadetblue 50%, transparent 100%);
+        background-position: 0px;
+    }
+
+    .has-submenu.open .submenu {
+        left: 0%;
+    }
+    .boxInput{
+        width: 90%;
+        margin: 40px auto;
+    }
+    input,
+    select{
+        width: 100%;
+    }
+    table.responsive-table tbody tr{
+        height:auto !important;        
+    }
+    table.responsive-table tbody tr:nth-child(odd),
+    body.contrast table.responsive-table tbody tr:nth-child(odd){
+        background-color:#80808014;
+    }
+    body.darkMode table.responsive-table tbody tr:nth-child(odd){
+        background-color:#80808030;
+    }
+    table.responsive-table{
+        width:100% !important;
+        height: 700px;
+    }
+    table.responsive-table thead tr{
+        display: none;
+    }
+    table.responsive-table, 
+    table.responsive-table thead, 
+    table.responsive-table tbody, 
+    table.responsive-table th, 
+    table.responsive-table td, 
+    table.responsive-table tr {
+        display: block;
+        border:none !important;
+    }
+    table.responsive-table tbody tr {
+        margin-bottom: 1rem;    
+        padding: 8px;
+    }
+    table.responsive-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        text-align: right!important;
+        border-bottom: 2px solid transparent!important;
+    }
+    table.responsive-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        flex-basis: 40%;
+        text-align: left;
+    }
+}
+
+/* Estilos para accesibilidad */
+#accessibility-options {
+    position: fixed;
+    opacity: 0%;
+    visibility: hidden;
+    bottom: 50px;
+    left: 35px;
+    padding: 5px;
+    background-color: lightgray;
+    box-shadow: 0px 0px 3px 0px black;
+    z-index: -1;
+    transition: var(--transition);
+}
+
+#accessibility-options.active {
+    opacity: 100%;
+    visibility: visible;
+}
+
+#accessibility-options button {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    transition: var(--transition);
+    transform: scale(1)
+}
+
+#accessibility-options button:hover {
+    transform: scale(1.2);
+}
+
+#accessibility-options button:last-child {
+    margin-bottom: unset;
+}
+
+#accessibility-button {
+    position: fixed;
+    z-index: 0;
+    bottom: 25px;
+    left: 5px;
+    font-size: 30px;
+    background-color: #c8c814;
+    box-shadow: 0px 0px 2px 0px black;
+    border-radius: 100%;
+    padding: 0;
+    height: 30px;
+    cursor: help;
+    transition: var(--transition);
+    transform: scale(1);
+}
+
+#accessibility-button:hover {
+    background-color: yellow;
+    transform: scale(1.2);
+}
+
+#accessibility-button.active {
+    background-color: yellow;
+}
+#accessibility-button i{
+    display: block;
+}
+
+/* Estilos para la pantalla de carga */
+#loading-screen {
+    position: fixed;
+    opacity: 0%;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+    transition: var(--transition);
+}
+
+#loading-screen.active {
+    opacity: 100%;
+    visibility: visible;
+    z-index: 2;
+}
+
+.loading-animation {
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid cadetblue;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    box-shadow: 0px 12px 15px 5px cadetblue;
+}
+
+#loading-screen p {
+    font-size: 24px;
+    text-shadow: 0 2px 3px white;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estilos para popups */
+.popup { position: fixed; bottom: 0%; right: -100%; transform: translate(0%, -50%); border-radius: 5px; padding: 20px; background-color: white; border: none; box-shadow: 0px 0px 10px black,inset 0px 0px 10px transparent; z-index: 1001; transition: var(--transition);}
+.popup.active{
+    right: 1%;
+}
+.popup.success { box-shadow:  5px 3px 10px 0px black,inset 0px 0px 10px 0px green; }
+.popup.error { box-shadow: 5px 3px 10px 0px black,inset 0px 0px 10px 0px red; }
+.popup.warning { box-shadow: 5px 3px 10px 0px black,inset 0px 0px 10px 0px orange; }
+
+
+
+
+
+
+
+
+
+/* Estilos para el formulario de proformas */
+#proforma-generator {
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-top: 20px; /* Espacio superior */
+    width: 95%; /* Ancho adaptable */
+    margin-left: auto;
+    margin-right: auto;
+}
+.group-form{
+    display: flex;
+}
+.group-form .form-section{
+    width: 50%;
+    margin: 0 auto 0 auto; 
+}
+.form-section {
+    margin-bottom: 20px;
+    border: 1px solid #ddd; /* Borde sutil */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */        
+    overflow: auto;
+}
+
+#product-inputs-container {
+    margin-bottom: 10px;
+}
+
+.product-input {
+    display: flex; /* Para alinear los inputs horizontalmente */
+    flex-wrap: wrap; /* Para que se ajusten a pantallas pequeñas */
+    gap: 10px; /* Espacio entre los inputs */
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.product-input > * {
+    flex-grow: 1; /* Para que los inputs se expandan */
+    min-width: 80px; /* Ancho mínimo para evitar que se vean muy pequeños */
+    box-sizing: border-box; /* Para que el padding no afecte el ancho */
+}
+#productos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#productos-table th, #productos-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#logo-preview{
+    padding: 5px;
+}
+#logo-preview img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+#crear-proforma,
+#guardar-proforma{
+    margin: 15px 10px auto auto;
+}
+table tfoot td{
+    text-align: right !important;
+}
+
+@media screen and (max-width:768px){
+    .group-form{
+        display: block;
+    }
+    .group-form .form-section{
+        width: unset;
+    }
+    .product-input{
+        display: block;
+    }    
+    table tfoot{
+        width: 50%;
+        display: block;
+        margin: auto;
+    }
+    table.responsive-table tfoot td{
+        text-align: center !important;
+        box-shadow: 0px 0px 1px 0px black;
+        display: block;
+    }
+    table.responsive-table tfoot td::before{
+        display: none;
+    }
+}
+/* Media Queries para Responsividad */
+@media (max-width: 600px) {
+    .product-input {
+        flex-direction: column; /* Apilar verticalmente en pantallas pequeñas */
+        align-items: stretch; /* Estirar los inputs al ancho completo */
+    }
+}
