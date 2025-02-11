@@ -10,7 +10,7 @@ const buildHTML = {
     table:{
         proforma:function(tabla,fila,producto){
             $.ajax({
-                url:"./objetos/tabla/proforma.html",
+                url:"objetos/tabla/proforma.html",
                 success:function(html){
                     var pos = 0;
                     const objProducto = [
