@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Factura</title>
+    <style>
+        /* Estilos CSS para la plantilla */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .factura {
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        .encabezado{
+            width: 100%;
+            margin-bottom: 75px;
+            display: flex;
+            position: relative;
+        }
+        .logo{
+            position: absolute;
+            width: 50%;
+            right: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        .logo img{
+            position: absolute;
+            width: 350px;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            opacity: 75%;
+            margin: auto;
+        }
+        .encabezado .empresa,
+        .encabezado .cliente{
+            width: 50%;
+        }
+        .empresa table,
+        .cliente table{
+            width: 350px;
+        }
+        .empresa table tr,
+        .cliente table tr{
+            display: block;
+            border: 1px solid black;
+        }
+        .empresa table tr th,
+        .cliente table tr th{
+            width: 100px;
+            text-align: end;
+            color: gray;
+        }
+        .empresa table tr td,
+        .cliente table tr td{
+            display: block;
+            text-align: end;
+        }
+        .cliente{
+            display: block;
+            float: right;
+        }
+        .cliente h3{
+            text-align: end;
+        }
+        .cliente table{
+            float: right;
+        }
+        .tabla {
+            width: 100%;    
+            display: flex;        
+            padding: 10px;
+            border-top: 2px solid transparent;
+            border-image: linear-gradient(0.25turn, white 0%, black 50%, white 100%);
+            border-image-slice: 1;
+        }
+        .tabla table {
+            width: 100%;            
+            padding: 20px;
+        }
+        .tabla table thead tr{
+            width: 100%;
+            border-bottom: 2px solid gray;            
+            display: inline-table;
+        }
+        .tabla table thead tr th{
+            border-right: 2px solid gray;
+        }
+        .tabla table tfoot{            
+            text-align: right;
+        }
+        .tabla table tfoot td{
+            margin-top: 25px;
+            width: fit-content;
+            display: block;
+            float: right;
+            border: 2px solid gray;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="factura">
+        <div class="encabezado">
+            <div class="logo">
+                <img src="{empresaLogo}" alt="logo">
+            </div>
+            <div class="empresa">
+                <h3>Empresa</h3>
+                <table>
+                    <tr>
+                        <th>Proforma</th>
+                        <td><strong>{empresaProforma}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <td><strong>{empresaID}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td><strong>{empresaNombre}</strong></td>                            
+                    </tr>
+                    <tr>
+                        <th>Teléfono</th>
+                        <td><strong>{empresaTelefono}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Correo</th>
+                        <td><strong>{empresaCorreo}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Moneda</th>
+                        <td><strong>{empresaMoneda}</strong></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="cliente">
+                <h3>Cliente</h3>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <td><strong>{clienteID}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td><strong>{clienteNombre}</strong></td>                            
+                    </tr>
+                    <tr>
+                        <th>Teléfono</th>
+                        <td><strong>{clienteTelefono}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Correo</th>
+                        <td><strong>{clienteCorreo}</strong></td>
+                    </tr>
+                </table>
+            </div>    
+        </div>
+        <div class="tabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Código</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Descuento</th>
+                        <th>Impuesto</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total:</strong>{total}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <p>
+            <strong>Nota</strong>        
+            Dicho documento tiene una validez de 15 días
+        </p>
+    </div>
+</body>
+</html>

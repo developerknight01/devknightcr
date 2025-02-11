@@ -83,6 +83,8 @@ button.btn:hover{
 .boxInput{
     position: relative;
     margin: 40px 0;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
     width: fit-content;
 }
 .boxInput label{
@@ -467,13 +469,24 @@ i.help:hover{
     border-radius: 50%;
     width: 120px;
     height: 120px;
-    animation: spin 2s linear infinite;
+    -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
     box-shadow: 0px 12px 15px 5px cadetblue;
 }
 
 #loading-screen p {
     font-size: 24px;
     text-shadow: 0 2px 3px white;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
@@ -514,6 +527,7 @@ i.help:hover{
 }
 .group-form{
     display: flex;
+    margin-top: 15px;
 }
 .group-form .form-section{
     width: 50%;

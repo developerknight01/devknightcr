@@ -24,8 +24,9 @@ const buildHTML = {
                         "Subtotal"
                     ];
                     var row = $(html);
-                    $(row).find("tr").addClass("fila-"+fila);
+                    $(row).addClass("fila-"+fila);
                     $(row).find("td:first-child").text(fila);
+                    $(row).find("button").attr("data-value",fila);
                     $(tabla).append(row);
                     $(tabla).find("tr:last-child td.values").each(function(){                                                
                         $(this).text(producto[objProducto[pos]]);

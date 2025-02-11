@@ -6,9 +6,6 @@
     <title>DevKnight</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
-    <script src="js/global.js" defer></script>
-    <script src="js/object.js"></script>
 </head>
 <body>
     <div class="background"></div>
@@ -43,14 +40,15 @@
     <main>
         <section id="proforma-generator">
             <h2>Generador de Proformas</h2>
-    
+            <button id="cargar-proforma" class="btn search">Cargar Proforma</button>
+            
             <div class="group-form">
                 <div class="form-section empresa">
                     <h3>Datos de la Empresa</h3>
                     <h3>Cargar plantilla</h3>
                     <button id="click-plantilla" class="btn search">Buscar plantilla</button>
                     <div class="boxInput">
-                        <input type="text" id="empresa-proforma" class="full" data-type="text_num" value="000001" disabled>
+                        <input type="text" id="empresa-proforma" class="full" data-number="consecutivo" data-type="text_num">
                         <label># Proforma</label>          
                     </div>
                     <div class="boxInput">
@@ -192,5 +190,9 @@
     <footer>
         <p>&copy; 2024 DevKnight</p>
     </footer>
+    <script src="pluggins/jquery-3.6.0.min.js"></script>
+    <script src="pluggins/jspdf.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/object.js"></script>
 </body>
 </html>

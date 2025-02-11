@@ -47,7 +47,10 @@ const modeMessagePop = {
 //PROFORMA
 var moneda ="";
 let producto = [];
+let plantilla = [];
+let plantillaCliente = [];
 $(document).ready(function() {
+
     // Menú móvil
     $('.menu-toggle').click(function() {
         $(this).toggleClass('active');
@@ -98,6 +101,9 @@ $(document).ready(function() {
                 $(this).addClass("full");
                 if($(this).hasClass("precio"))
                     $(this).val(formatCurrency($(this).val()));
+                else if($(this).data("number")){
+                    $(this).val(formatConsecutive($(this).val()));
+                }
             }    
             else{
                 $(this).val(null);
@@ -113,6 +119,19 @@ $(document).ready(function() {
     })
 
     //PROFORMAS
+    $(document).on("click","#cargar-proforma",async function(){
+        let data = await loadJson();        
+        
+        producto = null; producto = [];
+        plantilla = null; plantilla = [];
+        plantillaCliente = null; plantillaCliente = [];
+        plantilla = data.empresa;
+        plantillaCliente = data.cliente;
+        producto = data.productos;
+        cargarDatosEmpresa(plantilla);
+        cargarDatosClientes(plantillaCliente);
+        cargarDatosProducto(producto);
+    });
     $(document).on("click","#click-logo",function(){
         $("#empresa-logo").click();
     })
@@ -130,7 +149,7 @@ $(document).ready(function() {
     });
     $(document).on("click","#click-plantilla-guardar",function() {
         if(!$(".form-section.empresa input").hasClass("error")){
-            let plantilla = {
+            plantilla = {
                 proformaEmpresa: $('#empresa-proforma').val(),
                 idEmpresa: $('#empresa-id').val(),
                 nombreEmpresa: $('#empresa-nombre').val(),
@@ -143,8 +162,7 @@ $(document).ready(function() {
             $(".form-section.producto select option").each(function(){
                 if($(this).hasClass("newOption")){
                     plantilla.unidadEmpresa.push({value:$(this).val(),name:$(this).text()});
-                }                    
-                
+                }                
             });
             saveJson(plantilla)
         }
@@ -155,25 +173,8 @@ $(document).ready(function() {
     $(document).on("click","#click-plantilla",async function() {
         try{
             var data = await loadJson();
-            $('#empresa-proforma').val(data.proformaEmpresa);
-            $('#empresa-id').val(data.idEmpresa);
-            $('#empresa-nombre').val(data.nombreEmpresa);
-            $('#empresa-telefono').val(data.telefonoEmpresa);
-            $('#empresa-correo').val(data.correoEmpresa);
-            $('#empresa-moneda').val(data.monedaEmpresa);
-            $('#logo-preview').html('<img src="' + data.logo + '" alt="Logo">');
-            $(".form-section.empresa input").each(function(){
-                if($(this).val().trim().length > 0)
-                    $(this).addClass("full");
-            })
-            if(data.unidadEmpresa.length > 0){
-                for(var i = 0; i < data.unidadEmpresa.length; i++){
-                    $(".form-section.producto select").append(buildHTML['select'].option(data.unidadEmpresa[i].value,data.unidadEmpresa[i].name));
-                }
-                $(".form-section.producto select").find("option").attr("selected",false);
-                $(".form-section.producto select").val("");
-            }
-            moneda = data.monedaEmpresa;
+            plantilla = data;
+            cargarDatosEmpresa(plantilla);
         }
         catch(error){
             showPopup("Problemas al cargar la plantilla",modeMessagePop['warning']);
@@ -181,13 +182,13 @@ $(document).ready(function() {
     });
     $(document).on("click","#click-plantilla-guardar-cliente",function() {
         if(!$(".form-section.empresa input").hasClass("error")){
-            let plantilla = {
+            plantillaCliente = {
                 idCliente: $('#cliente-id').val(),
                 nombreCliente: $('#cliente-nombre').val(),
                 telefonoCliente:$("#cliente-telefono").val(),
                 correoCliente:$("#cliente-correo").val()
             };
-            saveJson(plantilla)
+            saveJson(plantillaCliente)
         }
         else{
             showPopup(messagePop['field']['rejectPattern'],modeMessagePop['error']);
@@ -196,14 +197,8 @@ $(document).ready(function() {
     $(document).on("click","#click-plantilla-cliente",async function() {
         try{
             var data = await loadJson();
-            $('#cliente-id').val(data.idCliente);
-            $('#cliente-nombre').val(data.nombreCliente);
-            $('#cliente-telefono').val(data.telefonoCliente);
-            $('#cliente-correo').val(data.correoCliente);
-            $(".form-section.cliente input").each(function(){
-                if($(this).val().trim().length > 0)
-                    $(this).addClass("full");
-            })
+            plantillaCliente = data;
+            cargarDatosClientes(plantillaCliente);
         }
         catch(error){
             showPopup("Problemas al cargar la plantilla",modeMessagePop['warning']);
@@ -240,10 +235,10 @@ $(document).ready(function() {
             $(this).removeClass("full");
         });
     });
-    $(document).on("click","#agregar-item",function(){
+    $(document).on("click","#agregar-item,#actualizar-item",function(){
         var flag = true;
-        var Subtotal = 0;
-        var total = 0;
+        var Subtotal = 0;        
+        var obj = $(this).attr("id");
         //Se validan los campos tipo input
         $(".form-section.producto input").each(function(){
             if(!checkField($(this)))
@@ -266,37 +261,78 @@ $(document).ready(function() {
             if($("#producto-descuento").val() > 0)
                 Subtotal = Subtotal - (Subtotal*($("#producto-descuento").val()/100).toFixed(2));
             
-            producto.push({
-                Codigo:$("#producto-codigo").val(),
-                Descripcion:$("#producto-descripcion").val(),
-                Unidad:$("#producto-unidad").val(),
-                Cantidad:$("#producto-cantidad").val(),
-                Precio:formatCurrency($("#producto-precio").val()),
-                Descuento:$("#producto-descuento").val(),
-                Impuesto:$("#producto-impuesto").val(),
-                Subtotal:formatCurrency(Subtotal)
-            });            
-            
-            //Se refresca la tabla
-            $("#productos-table tbody tr").remove();
-            for(var i = 0; i < producto.length; i++){
-                buildHTML['table'].proforma($("#productos-table tbody"),(i+1),producto[i]);
-                total = parseFloat(total) + parseFloat(unformatCurrency(producto[i].Subtotal));
-                console.log(total);                                
+            if(obj != "actualizar-item"){
+                producto.push({
+                    Codigo:$("#producto-codigo").val(),
+                    Descripcion:$("#producto-descripcion").val(),
+                    Unidad:$("#producto-unidad").val(),
+                    Cantidad:$("#producto-cantidad").val(),
+                    Precio:formatCurrency($("#producto-precio").val()),
+                    Descuento:$("#producto-descuento").val(),
+                    Impuesto:$("#producto-impuesto").val(),
+                    Subtotal:formatCurrency(Subtotal)
+                });
             }
-            $("#total-proforma").text(formatCurrency(total));
+            else if(obj == "actualizar-item"){
+                let productoActualizado = producto.find(item => item.Codigo == localStorage.getItem("codigo"));
+                productoActualizado.Codigo = $("#producto-codigo").val()
+                productoActualizado.Descripcion = $("#producto-descripcion").val()
+                productoActualizado.Unidad = $("#producto-unidad").val()
+                productoActualizado.Cantidad = $("#producto-cantidad").val()
+                productoActualizado.Precio = formatCurrency($("#producto-precio").val())
+                productoActualizado.Descuento = $("#producto-descuento").val()
+                productoActualizado.Impuesto = $("#producto-impuesto").val()
+                productoActualizado.Subtotal = formatCurrency(Subtotal);
+                $("#agregar-item").attr("id","agregar-item");
+                $("#agregar-item").text("Agregar");
+            }
 
-            //Se limpian los campos
-            $(".form-section.producto input").each(function(){
-                $(this).val("");
-                $(this).removeClass("full");
-            })
-            $(".form-section.producto select").val("");
-            $(".form-section.producto select").removeClass("full");
-            $("#producto-codigo").focus();
+            cargarDatosProducto();
         }
     });
-
+    $(document).on("click","#productos-table button.edit",function(){
+        const cod = $(this).parent().parent().find("td:nth-child(2)").text().trim();        
+        let prod = producto.find(item => item.Codigo === cod);
+        localStorage.setItem("codigo",prod.Codigo);
+        $("#producto-codigo").val(prod.Codigo);
+        $("#producto-descripcion").val(prod.Descripcion);
+        $("#producto-unidad").val(prod.Unidad);
+        $("#producto-cantidad").val(prod.Cantidad);
+        formatCurrency($("#producto-precio").val(prod.Precio));
+        $("#producto-descuento").val(prod.Descuento);
+        $("#producto-impuesto").val(prod.Impuesto);
+        $(".form-section.producto input,.form-section.producto select").addClass("full");
+        $("#agregar-item").text("Actualizar");
+        $("#agregar-item").attr("id","actualizar-item");        
+    });
+    $(document).on("click","#productos-table button.delete",function(){
+        const cod = $(this).parent().parent().find("td:nth-child(2)").text().trim();
+        producto = producto.filter(item => item.Codigo !== cod);
+        var total = 0;
+        //Se refresca la tabla
+        $("#productos-table tbody tr").remove();
+        for(var i = 0; i < producto.length; i++){
+            buildHTML['table'].proforma($("#productos-table tbody"),(i+1),producto[i]);
+            total = parseFloat(total) + parseFloat(unformatCurrency(producto[i].Subtotal));
+        }
+        $("#total-proforma").text(formatCurrency(total));
+    });
+    $(document).on("click","#guardar-proforma",function(){
+        if(producto.length > 0){
+            let proforma = {
+                empresa:plantilla,
+                cliente:plantillaCliente,
+                productos:producto
+            };
+            saveJson(proforma);
+        }
+        else{
+            showPopup("No hay datos por guardar",modeMessagePop['warning']);
+        }
+    });
+    $(document).on("click","#crear-proforma",function(){
+        generarPDF();
+    });
 });
 // Click de iconos de ayuda
 function clickHelpIcon(message){
@@ -417,6 +453,9 @@ function evaluateEmptyField(value,type){
         return value;
     }
 }
+function formatConsecutive(number){
+    return number.padStart(6,0);
+}
 function formatCurrency(number) {
     number = number.toString().replace(/\s+/g, '');
 
@@ -434,4 +473,127 @@ function unformatCurrency(number){
     var unformattedNumber = number.replace(/[,]/g, '');
     unformattedNumber = unformattedNumber.replace(moneda,'');
     return unformattedNumber;
+}
+
+//Metodos de Proformas
+function cargarDatosEmpresa(data){
+    $('#empresa-proforma').val(data.proformaEmpresa);
+    $('#empresa-id').val(data.idEmpresa);
+    $('#empresa-nombre').val(data.nombreEmpresa);
+    $('#empresa-telefono').val(data.telefonoEmpresa);
+    $('#empresa-correo').val(data.correoEmpresa);
+    $('#empresa-moneda').val(data.monedaEmpresa);
+    $('#logo-preview').html('<img src="' + data.logo + '" alt="Logo">');
+    $(".form-section.empresa input").each(function(){
+        if($(this).val().trim().length > 0)
+            $(this).addClass("full");
+    })
+    if(data.unidadEmpresa.length > 0){
+        for(var i = 0; i < data.unidadEmpresa.length; i++){
+            $(".form-section.producto select").append(buildHTML['select'].option(data.unidadEmpresa[i].value,data.unidadEmpresa[i].name));
+        }
+        $(".form-section.producto select").find("option").attr("selected",false);
+        $(".form-section.producto select").val("");
+    }
+    moneda = data.monedaEmpresa;
+}
+function cargarDatosClientes(data){
+    $('#cliente-id').val(data.idCliente);
+    $('#cliente-nombre').val(data.nombreCliente);
+    $('#cliente-telefono').val(data.telefonoCliente);
+    $('#cliente-correo').val(data.correoCliente);
+    $(".form-section.cliente input").each(function(){
+        if($(this).val().trim().length > 0)
+            $(this).addClass("full");
+    })
+}
+function cargarDatosProducto(){
+    var total = 0;
+    //Se refresca la tabla
+    $("#productos-table tbody tr").remove();
+    for(var i = 0; i < producto.length; i++){
+        buildHTML['table'].proforma($("#productos-table tbody"),(i+1),producto[i]);
+        total = parseFloat(total) + parseFloat(unformatCurrency(producto[i].Subtotal));                        
+    }
+    $("#total-proforma").text(formatCurrency(total));
+
+    //Se limpian los campos
+    $(".form-section.producto input").each(function(){
+        $(this).val("");
+        $(this).removeClass("full");
+    })
+    $(".form-section.producto select").val("");
+    $(".form-section.producto select").removeClass("full");
+    $("#producto-codigo").focus();
+}
+function obtenerDatos(){
+    plantilla = {
+        proformaEmpresa: $('#empresa-proforma').val(),
+        idEmpresa: $('#empresa-id').val(),
+        nombreEmpresa: $('#empresa-nombre').val(),
+        telefonoEmpresa:$("#empresa-telefono").val(),
+        correoEmpresa:$("#empresa-correo").val(),
+        logo: $('#logo-preview img').attr('src'), // Obtener la URL del logo
+        monedaEmpresa:$("#empresa-moneda").val()
+    };
+    plantillaCliente = {
+        idCliente: $('#cliente-id').val(),
+        nombreCliente: $('#cliente-nombre').val(),
+        telefonoCliente:$("#cliente-telefono").val(),
+        correoCliente:$("#cliente-correo").val()
+    };
+}
+function generarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    obtenerDatos();
+    console.log(plantilla);
+    console.log(plantillaCliente);
+    console.log(producto);
+    
+    
+    
+    // Configuración inicial (ajusta según tus necesidades)
+    const margen = 20;
+    const anchoPagina = doc.internal.pageSize.getWidth();
+    const altoPagina = doc.internal.pageSize.getHeight();
+
+  // Función auxiliar para agregar una nueva página si es necesario
+    function agregarPagina() {
+        doc.addPage();
+        // Reestablecer el cursor vertical
+        doc.y = margen;
+    }
+
+  // Función para agregar una sección al PDF
+    function agregarSeccion(titulo, datos) {
+        doc.setFontSize(12);
+        doc.text(titulo, margen);    
+    
+        // Convertir los datos en un formato compatible con jsPDF AutoTable
+        const dataForTable = datos.map(row => Object.values(row));
+    
+        doc.autoTable({
+        head: Object.keys(datos[0]), // Obtener los encabezados de la tabla desde el primer objeto
+        body: dataForTable,
+        startY: doc.getY() + 10,
+        theme: 'grid'
+        });
+    }
+
+    agregarSeccion('Datos de la Empresa', Object.entries(plantilla));
+    agregarSeccion('Datos del Cliente', Object.entries(plantillaCliente));
+    agregarSeccion('Productos', producto);
+
+  // Agregar el pie de página a cada página
+    doc.setFontSize(10);
+    doc.text('Esta proforma tiene una validez de 15 días', margen, doc.autoTable.previous.finalY + 10);
+
+  // Si la tabla de productos no cabe en una página, agregar más páginas
+    if (doc.autoTable.previous.finalY > altoPagina - margen * 2) {
+        agregarPagina();
+        agregarSeccion('Productos (continuación)', '#productos-table');
+    }
+
+    doc.save('proforma.pdf');
 }
